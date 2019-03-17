@@ -13,6 +13,11 @@ func Run(version string) error {
 	app.Description = "lightning and reliable website analytics"
 	app.Version = version
 
+	app.Commands = []cli.Command{
+		serverCommand,
+		databaseCommand,
+	}
+
 	app.Run(os.Args)
 	return nil
 }
