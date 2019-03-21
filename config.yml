@@ -1,0 +1,13 @@
+database:
+  adapter:  mysql2
+  host:     127.0.0.1
+  port:     3306
+  username: root
+  password: ''
+  database: pick_development
+  url:
+
+logger:
+  level:      debug   # Available log levels are trace, debug, info, warn, error, faral, panic.
+  formatter:  text    # Available formatters are text or json
+  output:     stdout  # Available output is stdout.
