@@ -8,6 +8,6 @@ database:
   url:
 
 logger:
-  level:      debug   # Available log levels are trace, debug, info, warn, error, faral, panic.
-  formatter:  text    # Available formatters are text or json
-  output:     stdout  # Available output is stdout.
+  output:       stdout  # Available output is stdout.
+  formatter:    text    # Available formatters are: text(default) and json.
+  level:        info    # Available log levels are trace, debug, info(default), warn, error, fatal, panic.
