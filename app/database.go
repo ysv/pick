@@ -2,20 +2,21 @@ package app
 
 import (
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type RawConnectionConf map[string]string
 
-func initDatabase(){
+func dbConnect(){
 	conn, err := sqlx.Connect(connectionConf())
 	if err != nil {
 		app.logger.Fatalf("Error connecting to database: %s", err)
 	}
 
-	app.logger.Info("Successfully connected to DB")
+	s1, s2 := connectionConf()
+	app.logger.Infof("Successfully connected to DB: %s %s", s1, s2)
 	app.database = conn
 }
 

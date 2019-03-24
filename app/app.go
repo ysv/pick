@@ -19,6 +19,20 @@ var app Application
 func InitApp(){
 	initConfig()
 	initLogger()
-	initDatabase()
+}
+
+func GetLogger() *logrus.Logger {
+	return app.logger
+}
+
+func GetDB() *sqlx.DB {
+	if app.database == nil {
+		dbConnect()
+	}
+	return app.database
+}
+
+func CreateDB() *sqlx.DB {
+	return app.database
 }
 
