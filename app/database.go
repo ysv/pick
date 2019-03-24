@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 )
@@ -9,22 +10,30 @@ import (
 type RawConnectionConf map[string]string
 
 func initDatabase(){
-	conn, err := sqlx.Connect("mysql", connectionConf())
+	conn, err := sqlx.Connect(connectionConf())
 	if err != nil {
 		app.logger.Fatalf("Error connecting to database: %s", err)
 	}
+
+	app.logger.Info("Successfully connected to DB")
 	app.database = conn
 }
 
-func connectionConf() string{
-	dbConf := app.config.Sub("database")
-	switch dbConf.GetString("driver") {
+func connectionConf() (string, string){
+	var stringConf string
+
+	driver := app.config.GetString("database.driver")
+	rawConnectionConf := app.config.GetStringMapString("database")
+
+	switch driver {
 	case "mysql":
-		return buildMySQLConnectionConf(app.config.GetStringMapString("database"))
+		stringConf = buildMySQLConnectionConf(rawConnectionConf)
+	case "sqlite3":
+		stringConf = buildSQLite3ConnectionConf(rawConnectionConf)
 	default:
-		app.logger.Fatalf("Unsupported database driver %s", dbConf.GetString("driver"))
+		app.logger.Fatalf("Unsupported database driver %s", driver)
 	}
-	return ""
+	return driver, stringConf
 }
 
 func buildMySQLConnectionConf(conf RawConnectionConf) string {
@@ -34,5 +43,10 @@ func buildMySQLConnectionConf(conf RawConnectionConf) string {
 	mysqlConf.Passwd = conf["password"]
 	mysqlConf.Net = "tcp"
 	mysqlConf.DBName = conf["name"]
+	// TODO: Setup connection pool.
 	return mysqlConf.FormatDSN()
+}
+
+func buildSQLite3ConnectionConf(conf RawConnectionConf) string {
+	return fmt.Sprintf("%s.db", conf["name"])
 }

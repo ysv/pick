@@ -1,13 +1,12 @@
 database:
-  driver:   mysql
+  driver:   mysql      # Available drivers are mysql and sqlite3.
   host:     127.0.0.1
   port:     3306
   user:     root
   password: ''
-  database: pick_development
-  url:
+  name:     pick_development
 
 logger:
   output:       stdout  # Available output is stdout.
-  formatter:    text    # Available formatters are: text(default) and json.
-  level:        info    # Available log levels are trace, debug, info(default), warn, error, fatal, panic.
+  formatter:    text    # Available formatters are text(default) and json.
+  level:        debug   # Available log levels are trace, debug, info(default), warn, error, fatal, panic.
