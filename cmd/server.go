@@ -1,8 +1,11 @@
 package cmd
 
 import (
-	"fmt"
+	"github.com/gorilla/mux"
 	"github.com/urfave/cli"
+	"github.com/ysv/pick/api"
+	"github.com/ysv/pick/app"
+	"net/http"
 )
 
 var serverCommand = cli.Command{
@@ -20,5 +23,9 @@ var serverCommand = cli.Command{
 }
 
 func server(c *cli.Context){
-	fmt.Println("Starting pick HTTP server...")
+	app.GetLogger().Info("Starting pick HTTP server...")
+	m := mux.NewRouter()
+	api.RegisterRoutes(m.PathPrefix("/api").Subrouter())
+
+	app.GetLogger().Fatal(http.ListenAndServe(":8008", m))
 }
