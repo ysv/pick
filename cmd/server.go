@@ -29,5 +29,5 @@ func server(c *cli.Context){
 	// Add API subrouter with /pick & /health endpoints.
 	api.RegisterRoutes(m.PathPrefix("/api").Subrouter())
 
-	app.GetLogger().Fatal(http.ListenAndServe(":8008", m))
+	app.GetLogger().Fatal(http.ListenAndServe(":8080", m))
 }

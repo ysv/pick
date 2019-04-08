@@ -11,5 +11,19 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+# Documentation and stuff
+README.md
+LICENSE
+
+# Git files
+.gitignore
+
+# Configuration files
+config.yml
+
+# Docker stuff
+Docker
+docker-compose.yml
+
 # Built binaries
 ./bin/*

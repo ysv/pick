@@ -1,4 +1,0 @@
-FROM golang:latest AS builder
-# TODO: Add builder steps.
-
-# TODO: Add running steps.
