@@ -2,8 +2,13 @@ package sqlstore
 
 import (
 	"fmt"
+
+	"github.com/gobuffalo/packr"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
+
+	migrate "github.com/rubenv/sql-migrate"
+	log "github.com/sirupsen/logrus"
 )
 
 type sqlstore struct {
@@ -31,4 +36,30 @@ func (*sqlstore) ListPageviews() error{
 
 func (*sqlstore) Health() error{
 	return nil
+}
+
+func (db *sqlstore) Migrate() {
+	migrationSource := &migrate.PackrMigrationSource{
+		Box: packr.NewBox("./migrations"),
+		Dir: db.conf.Driver,
+	}
+	migrate.SetTable("migrations")
+
+	migrations, err := migrationSource.FindMigrations()
+	if err != nil {
+		log.Errorf("Error loading database migrations: %s", err)
+	}
+
+	if len(migrations) == 0 {
+		log.Fatalf("Missing database migrations")
+	}
+
+	n, err := migrate.Exec(db.DB.DB, db.conf.Driver, migrationSource, migrate.Up)
+	if err != nil {
+		log.Errorf("Error applying database migrations: %s", err)
+	}
+
+	if n > 0 {
+		log.Infof("Applied %d database migrations!", n)
+	}
 }

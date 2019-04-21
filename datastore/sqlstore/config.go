@@ -32,6 +32,9 @@ func (conf *Config) forMySQL() string{
 	mysqlConf.Passwd = conf.Password
 	mysqlConf.Net = "tcp"
 	mysqlConf.DBName = conf.Name
+	mysqlConf.Params = map[string]string{
+		"parseTime": "true",
+	}
 	// TODO: Setup connection pool.
 	return mysqlConf.FormatDSN()
 }

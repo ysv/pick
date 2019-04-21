@@ -6,6 +6,7 @@ type Datastore interface {
 	InsertPageviews() error
 	ListPageviews() error
 
+	Migrate()
 	Health() error
 }
 

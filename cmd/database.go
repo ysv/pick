@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/urfave/cli"
+	"github.com/ysv/pick/app"
 )
 
 var databaseCommand = cli.Command {
@@ -10,11 +11,6 @@ var databaseCommand = cli.Command {
 	Aliases: []string{"db"},
 	Usage: 	 "Run operations with database.",
 	Subcommands: []cli.Command {
-		{
-			Name:   "create",
-			Usage:  "Create database.",
-			Action: databaseCreate,
-		},
 		{
 			Name:   "migrate",
 			Usage:  "Migrate database.",
@@ -29,12 +25,8 @@ var databaseCommand = cli.Command {
 
 }
 
-func databaseCreate(c *cli.Context){
-	fmt.Println("Creating DB...")
-}
-
 func databaseMigrate(c *cli.Context){
-	fmt.Println("Migrating DB...")
+	app.GetDB().Migrate()
 }
 
 func databaseDrop(c *cli.Context){
