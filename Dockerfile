@@ -17,6 +17,7 @@ RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o /go/bin/pick pick.go
 
 FROM alpine
 COPY --from=builder /go/bin/pick /
+COPY ./assets /assets
 EXPOSE 8080
 ENTRYPOINT ["/pick"]
 CMD ["server"]

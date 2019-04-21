@@ -3,8 +3,8 @@ package cmd
 import (
 	"github.com/gorilla/mux"
 	"github.com/urfave/cli"
-	"github.com/ysv/pick/app/api"
 	"github.com/ysv/pick/app"
+	"github.com/ysv/pick/app/api"
 	"net/http"
 )
 
@@ -29,5 +29,8 @@ func server(c *cli.Context){
 	// Add API subrouter with /pick & /health endpoints.
 	api.RegisterRoutes(m.PathPrefix("/api").Subrouter())
 
-	app.GetLogger().Fatal(http.ListenAndServe(":8080", m))
+	// Add assets directory serving with pick.js.
+	m.Handle("/assets/pick.js", http.StripPrefix("/assets", http.FileServer(http.Dir("assets"))))
+
+	app.GetLogger().Fatal(http.ListenAndServe(c.String("port"), m))
 }
