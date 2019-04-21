@@ -28,19 +28,16 @@ func GetLogger() *logrus.Logger {
 
 func GetDB() datastore.Datastore {
 	if app.database == nil {
+		rawConf := app.config.Sub("database")
 		conf := sqlstore.Config{
-			Driver: "mysql",
-			Host: "127.0.0.1",
-			Port: 3306,
-			User: "root",
-			Password: "",
-			Name: "pick_development",
+			Driver:   rawConf.GetString("driver"),
+			Host:     rawConf.GetString("host"),
+			Port:     int16(rawConf.GetInt("port")),
+			User:     rawConf.GetString("user"),
+			Password: rawConf.GetString("password"),
+			Name:     rawConf.GetString("name"),
 		}
 		app.database = datastore.NewSQLStore(conf)
 	}
-	return app.database
-}
-
-func CreateDB() datastore.Datastore {
 	return app.database
 }
