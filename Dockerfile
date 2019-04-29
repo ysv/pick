@@ -13,11 +13,13 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY ./ ./
-RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o /go/bin/pick pick.go
+RUN go get -u github.com/gobuffalo/packr/packr \
+ && CGO_ENABLED=1 GOOS=linux GOARCH=amd64 $GOPATH/bin/packr build -o pick pick.go
 
-FROM alpine
-COPY --from=builder /go/bin/pick /
-COPY ./assets /assets
-EXPOSE 8080
-ENTRYPOINT ["/pick"]
-CMD ["server"]
+CMD ["./pick"]
+
+#FROM alpine
+#COPY --from=builder /go/src/github.com/ysv/pick/pick /
+#EXPOSE 8080
+#ENTRYPOINT ["/pick"]
+#CMD ["server"]

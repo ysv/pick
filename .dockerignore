@@ -22,8 +22,12 @@ LICENSE
 config.yml
 
 # Docker stuff
-Docker
+Dockerfile
 docker-compose.yml
 
 # Built binaries
 ./bin/*
+pick
+
+# MySQL data
+mysql-data
