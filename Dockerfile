@@ -18,6 +18,7 @@ RUN go get -u github.com/gobuffalo/packr/packr \
 
 CMD ["./pick"]
 
+# TODO: Fix multistage build.
 #FROM alpine
 #COPY --from=builder /go/src/github.com/ysv/pick/pick /
 #EXPOSE 8080
