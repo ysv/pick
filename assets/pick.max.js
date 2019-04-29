@@ -102,7 +102,7 @@
 
     function findTrackerUrl() {
         const el = document.getElementById('pick-script')
-        return el ? el.src.replace('pick.js', 'api/pick') : '';
+        return el ? el.src.replace('tracker.js', 'collect') : '';
     }
 
     function trackPageview(vars) {

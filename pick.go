@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/ysv/pick/cmd"
+	"github.com/ysv/pick/pkg/cli"
 )
 
 
@@ -12,7 +12,7 @@ var (
 )
 
 func main() {
-	err := cmd.Run(version)
+	err := cli.Run(version)
 	if err != nil {
 		os.Exit(1)
 	}
