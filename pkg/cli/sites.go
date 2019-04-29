@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"math/rand"
+	"time"
 
 	"github.com/urfave/cli"
 	"github.com/ysv/pick/pkg/models"
@@ -11,24 +12,6 @@ import (
 var sitesCmd = cli.Command{
 	Name:   "sites",
 	Usage:  "manage sites",
-	Flags: []cli.Flag{
-		cli.Int64Flag{
-			Name:  "site-id",
-			Usage: "ID of the site to show for editing",
-		},
-		cli.StringFlag{
-			Name:  "site-name",
-			Usage: "",
-		},
-		cli.StringFlag{
-			Name:  "end-date",
-			Usage: "end date, expects a date in format 2006-01-02",
-		},
-		cli.BoolFlag{
-			Name:  "json",
-			Usage: "get a json response",
-		},
-	},
 	Subcommands: []cli.Command{
 		{
 			Name: "add",
@@ -40,24 +23,11 @@ var sitesCmd = cli.Command{
 			},
 
 		},
-		{
-			Name: "edit",
-			Action: siteEdit,
-			Flags:  []cli.Flag {
-				cli.StringFlag{
-					Name:  "site-name",
-				},
-				cli.StringFlag{
-					Name:  "site-id",
-				},
-			},
-
-		},
-
 	},
 }
 
 func siteAdd(c *cli.Context) error {
+	rand.Seed(time.Now().Unix())
 	sname := c.String("site-name")
 	sid := generateTrackingID()
 	s := &models.Site{
@@ -66,58 +36,34 @@ func siteAdd(c *cli.Context) error {
 	}
 
 	if err := app.database.SaveSite(s); err != nil {
+		fmt.Println(err)
 		return err
 	}
-	fmt.Println(sid)
+
+	fmt.Println("Insert the next tracking snippet into your HTML")
+	printTrackingSnippet(sid)
+	fmt.Println()
 	return nil
 }
 
-func siteEdit(c *cli.Context) error {
-	sname := c.String("site-name")
-	sid := generateTrackingID()
-	s := &models.Site{
-		TrackingID: sid,
-		Name: sname,
-	}
-
-	if err := app.database.SaveSite(s); err != nil {
-		return err
-	}
-	fmt.Println(sid)
-	return nil
+func printTrackingSnippet(sid string) {
+	fmt.Printf(`
+<!-- Pick - Lightning and reliable website analytics. Let's pick it! - https://github.com/ysv/pick -->
+<script>
+	(function(f, a, t, h, o, m){
+	a[h]=a[h]||function(){
+		(a[h].q=a[h].q||[]).push(arguments)
+	};
+	o=f.createElement('script'),
+		m=f.getElementsByTagName('script')[0];
+	o.async=1; o.src=t; o.id='pick-script';
+	m.parentNode.insertBefore(o,m)
+})(document, window, '//localhost:8081/pick.js', 'pick');
+pick('set', 'siteId', '%s');
+pick('trackPageview');
+</script>
+<!-- / Fathom -->`, sid)
 }
-
-//func saveSite(w http.ResponseWriter, r *http.Request) error {
-//	var s *models.Site
-//	vars := mux.Vars(r)
-//	sid, ok := vars["id"]
-//	if ok {
-//		id, err := strconv.ParseInt(sid, 10, 64)
-//		if err != nil {
-//			return err
-//		}
-//
-//		s, err = app.database.GetSite(id)
-//		if err != nil {
-//			return err
-//		}
-//	} else {
-//		s = &models.Site{
-//			TrackingID: generateTrackingID(),
-//		}
-//	}
-//
-//	err := json.NewDecoder(r.Body).Decode(s)
-//	if err != nil {
-//		return err
-//	}
-//
-//	if err := app.database.SaveSite(s); err != nil {
-//		return err
-//	}
-//
-//	return respond(w, http.StatusOK, envelope{Data: s})
-//}
 
 func generateTrackingID() string {
 	return randomString(5)
