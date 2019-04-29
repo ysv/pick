@@ -1,17 +1,26 @@
 version: "3"
 services:
-  pick:
-    image: syaroslav/pick:latest
+  fathom:
+    image: syaroslav/pick:0.0.1
     ports:
     - "8080:8080"
-#    environment:
+    environment:
+    - "PICK_SERVER_ADDR=:8080"
+    - "PICK_GZIP=true"
+    - "PICK_DEBUG=false"
+    - "PICK_DATABASE_DRIVER=mysql"
+    - "PICK_DATABASE_NAME=pick"
+    - "PICK_DATABASE_USER=pick"
+    - "PICK_DATABASE_PASSWORD=changeme"
+    - "PICK_DATABASE_HOST=mysql:3306"
+    - "PICK_SECRET=GMWJGSAPGATLMODYLUMGUQDIWWMNPPQIMGEGMGKB"
     links:
     - "mysql:mysql"
     depends_on:
     - mysql
     restart: always
   mysql:
-    image: "mysql:5"
+    image: "mysql:5.7"
     volumes:
     - ./mysql-data:/var/lib/mysql
     ports:
@@ -19,7 +28,7 @@ services:
     environment:
     - "MYSQL_ALLOW_EMPTY_PASSWORD=false"
     - "MYSQL_DATABASE=pick"
-    - "MYSQL_PASSWORD=password01"
-    - "MYSQL_ROOT_PASSWORD=password01"
+    - "MYSQL_PASSWORD=changeme"
+    - "MYSQL_ROOT_PASSWORD=changeme"
     - "MYSQL_USER=pick"
     restart: always
