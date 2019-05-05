@@ -21,16 +21,23 @@ services:
     restart: always
     command: ./pick server
 
-  supreset:
+  superset:
     image: amancevice/superset:0.18.5
     ports:
       - "8000:8088"
     environment:
-    - "SQLALCHEMY_DATABASE_URI=mysql://root:changeme@mysql:3306/superset"
+    - "MYSQL_USER=root"
+    - "MYSQL_PASSWORD=changeme"
+    - "MYSQL_HOST=mysql"
+    - "MYSQL_PORT=3306"
+    - "MYSQL_DB=superset"
     links:
     - "mysql:mysql"
     depends_on:
     - mysql
+    volumes:
+    # this is needed to communicate with the myslq
+    - ./superset_config.py:/home/superset/superset/superset_config.py
     restart: always
 
   mysql:
