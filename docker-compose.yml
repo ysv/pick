@@ -1,7 +1,7 @@
 version: "3"
 services:
   pick:
-    image: syaroslav/pick:0.0.sk
+    image: syaroslav/pick:0.0.3
     ports:
     - "8080:8080"
     environment:
@@ -20,10 +20,23 @@ services:
     - mysql
     restart: always
     command: ./pick server
+
+  supreset:
+    image: amancevice/superset:0.18.5
+    ports:
+      - "8000:8088"
+    environment:
+    - "SQLALCHEMY_DATABASE_URI=mysql://root:changeme@mysql:3306/superset"
+    links:
+    - "mysql:mysql"
+    depends_on:
+    - mysql
+    restart: always
+
   mysql:
     image: "mysql:5"
     volumes:
-    - ./mysql-data:/var/lib/mysql
+    - pick_mysql:/var/lib/mysql
     ports:
     - "127.0.0.1:3306:3306"
     environment:
@@ -33,3 +46,6 @@ services:
     - "MYSQL_ROOT_PASSWORD=changeme"
     - "MYSQL_USER=pick"
     restart: always
+
+volumes:
+  pick_mysql:

@@ -28,6 +28,7 @@ var sitesCmd = cli.Command{
 
 func siteAdd(c *cli.Context) error {
 	rand.Seed(time.Now().Unix())
+	// TODO: Add pick host parameter for generating tracking snippet.
 	sname := c.String("site-name")
 	sid := generateTrackingID()
 	s := &models.Site{
